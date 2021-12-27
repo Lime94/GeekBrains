@@ -10,6 +10,9 @@ import ru.geekbrains.mvpusers.UsersScreen
 import ru.geekbrains.navigation.CustomNavigator
 import javax.inject.Inject
 
+
+
+
 class MainActivity : AppCompatActivity() {
     private val navigator = CustomNavigator(activity = this, R.id.content)
 

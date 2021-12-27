@@ -6,11 +6,10 @@ import ru.geekbrains.data.GitHubUser
 
 interface UserView : MvpView {
 
-    /**
-     * Показывает информацию о пользователе.
-     * @param user пользователь
-     */
     @SingleState
-    fun showUser(user: GitHubUser)
+    fun showPhoto(url: String)
+
+    @SingleState
+    fun showName(name: String)
 
 }

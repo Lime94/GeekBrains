@@ -5,32 +5,28 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
+import ru.geekbrains.App
 import ru.geekbrains.R
-import ru.geekbrains.data.GitHubUser
-import ru.geekbrains.databinding.ViewUserBinding
+import ru.geekbrains.databinding.UserFragmentViewBinding
 
-class UserFragment: MvpAppCompatFragment(R.layout.view_user), UserView {
+class UserFragment: MvpAppCompatFragment(R.layout.user_fragment_view), UserView {
 
-    private lateinit var viewBinding: ViewUserBinding
+    private lateinit var viewBinding: UserFragmentViewBinding
 
     private val userLogin: String by lazy {
         arguments?.getString(ARG_USER_LOGIN).orEmpty()
     }
 
     private val presenter: UserPresenter by moxyPresenter {
-        UserPresenter(
-            userLogin = userLogin,
-        )
+        UserPresenter().apply {
+            init(userLogin)
+            App.instance.component.provideUserComponent().build().inject(this)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewBinding = ViewUserBinding.bind(view)
-        viewBinding.userLogin.text = userLogin
-    }
-
-    override fun showUser(user: GitHubUser) {
-        viewBinding.userLogin.text = user.login
+        viewBinding = UserFragmentViewBinding.bind(view)
     }
 
     companion object {
@@ -42,5 +38,13 @@ class UserFragment: MvpAppCompatFragment(R.layout.view_user), UserView {
                     putString(ARG_USER_LOGIN, userId)
                 }
             }
+    }
+
+    override fun showPhoto(url: String) {
+        presenter.loadPhoto(url, viewBinding.image)
+    }
+
+    override fun showName(name: String) {
+        viewBinding.textView.text = name
     }
 }
